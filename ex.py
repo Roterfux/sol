@@ -39,7 +39,7 @@ def input(key):
         y = random_generator.random() * 10 - 5     # Value between -5 and 5
         z = random_generator.random() * 10 - 5     # Value between -5 and 5
         s = random_generator.random() * 1          # Value between 0 and 1
-        newcube = Entity(parent=cube, model='cube', color=color.white, position=(x, y, z), scale=(s,s,s), texture="crate")
+        newcube = Entity(parent=cube, model='cube', color=color.white, position=(x, y, z), scale=(s, s, s), texture="tex/crate")
         cubes.append(newcube)
         '''Create another child cube and add it to the list but using the newcube as the parent, keep the same colour, make it smaller'''
         childcube = Entity(parent=newcube, model='cube', color=color.white, position=(1, 0, 0), scale=(s/2, s/2, s/2), texture="crate")
@@ -56,8 +56,8 @@ window.exit_button.visible = False      # Show the in-game red X that loses the 
 window.fps_counter.enabled = True       # Show the FPS (Frames per second) counter
 
 cubes = []                              # Create the list
-cube = Entity(model='cube', color=color.white, scale=(2, 6, 2), texture="waterfall", collider="box")
-cube2 = Entity(model='cube', color=color.rgba(255, 255, 255, 128), scale=(2.5, 6, 2.5), texture="waterfall")
+cube = Entity(model='cube', color=color.white, scale=(2, 6, 2), texture="tex/waterfall", collider="box")
+cube2 = Entity(model='cube', color=color.rgba(255, 255, 255, 128), scale=(2.5, 6, 2.5), texture="tex/waterfall")
 cubes.append(cube)                      # Add the cube to the list
 cubes.append(cube2)                     # Add the cube to the list
 

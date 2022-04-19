@@ -6,14 +6,14 @@ sun = Entity(model='sphere',
              position=(0, 0, 0),
              color=color.yellow,
              scale=2,
-             texture="2k_sun",
+             texture="tex/2k_sun",
              collider="sphere"
              )
 asphere = Entity(model="sphere",
                  position=(0, 0, 0),
                  color=color.rgba(255, 255, 0, 128),
                  scale=2.05,
-                 texture="2k_sun")
+                 texture="tex/2k_sun")
 
 
 def generate_star():

@@ -47,21 +47,21 @@ def input(key):
 
 
 def star():
-    sun     = Entity(model='sphere', position=(0, 0, 0), color=color.yellow,                 scale=2,    texture="2k_sun", collider="sphere")
-    corona  = Entity(model='sphere', position=(0, 0, 0), color=color.rgba(255, 255, 0, 128), scale=2.05, texture="2k_sun")
+    sun     = Entity(model='sphere', position=(0, 0, 0), color=color.yellow,                 scale=2,    texture="tex/2k_sun", collider="sphere")
+    corona  = Entity(model='sphere', position=(0, 0, 0), color=color.rgba(255, 255, 0, 128), scale=2.05, texture="tex/2k_sun")
     corona2 = Entity(model='sphere', position=(0, 0, 0), color=color.rgba(255, 255, 0, 32),  scale=2.15)
 
     return [sun, corona, corona2]
 
 
 def planet_earth(parent):
-    earth = Entity(parent=parent, model='sphere', position=(1, 0, 1), scale=0.2, texture="earth")
+    earth = Entity(parent=parent, model='sphere', position=(1, 0, 1), scale=0.2, texture="tex/earth")
     earth_atmosphere = Entity(parent=parent, model='sphere', position=(1, 0, 1), color=color.rgba(255, 255, 255, 32), scale=.22, texture="earth")
     return [earth, earth_atmosphere]
 
 
 def moon(parent):
-    return [Entity(parent=parent, model='sphere', color=color.white, position=(0.5, 0, 0.5), scale=0.09, texture="2k_moon")]
+    return [Entity(parent=parent, model='sphere', color=color.white, position=(0.5, 0, 0.5), scale=0.09, texture="tex/2k_moon")]
 
 
 sol     = star()
