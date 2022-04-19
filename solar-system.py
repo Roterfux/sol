@@ -1,5 +1,5 @@
 from ursina import *  # import ursina engine
-app = Ursina()  # Initialize your Ursina app
+
 
 
 def update():
@@ -22,14 +22,15 @@ def update():
         exit(0)
     print(camera.position)
 
-    Text.size = 0.001
-    info = Text(text="Hover!")
     if mouse.hovered_entity == sol[0]:
         print("Hover!")
-        #info.background = True
         info.visible = True
+        print(mouse.x, mouse.y)
+        info.x = mouse.x / 25.
+        info.y = mouse.y / 25.
     else:
         info.visible = False
+    print(mouse.x, mouse.y)
 
 
 def input(key):
@@ -64,13 +65,8 @@ def moon(parent):
     return [Entity(parent=parent, model='sphere', color=color.white, position=(0.5, 0, 0.5), scale=0.09, texture="tex/2k_moon")]
 
 
-sol     = star()
-planets = planet_earth(sol[0])
-moons   = moon(planets[0])
-
-
 def setup():
-    camera.position = (0, 5, -10)  # x, y, z
+    camera.position = (0, 3.7, -7.5)  # x, y, z
     camera.rotation_x = 30
     window.borderless = False  # Show a border
     window.fullscreen = False  # Go full screen
@@ -81,5 +77,17 @@ def setup():
     window.color = color.rgba(10, 10, 10, 0)
 
 
+app     = Ursina()
+sol     = star()
+planets = planet_earth(sol[0])
+moons   = moon(planets[0])
+
+Text.size = 0.002
+Text.default_resolution = 100
+info = Text(text="Hover!")
+info.visible = False
+
+
 setup()
+
 app.run()
