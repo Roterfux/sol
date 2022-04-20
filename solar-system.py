@@ -4,7 +4,6 @@ pause = False
 
 
 def update():
-
     if not pause:
         for entity in sol:
             entity.rotation_y += time.dt * 10
@@ -33,7 +32,7 @@ def key_action():
 
     if held_keys['x']:
         exit(0)
-    #print("{:.3f} {:.3f} {:.3f}".format(camera.position.x, camera.position.y, camera.position.z))
+    # print("{:.3f} {:.3f} {:.3f}".format(camera.position.x, camera.position.y, camera.position.z))
 
 
 def mouse_action():
@@ -43,7 +42,7 @@ def mouse_action():
         info.y = mouse.y / 25.
     else:
         info.visible = False
-    #print(": {:.3f} {:.3f}".format(mouse.x, mouse.y))
+    # print(": {:.3f} {:.3f}".format(mouse.x, mouse.y))
 
 
 def input(key):
@@ -65,29 +64,60 @@ def input(key):
 
 
 def star():
-    sol     = Entity(model='sphere', position=(0, 0, 0), color=color.yellow,                 scale=2,    texture="tex/2k_sun", collider="sphere")
-    corona  = Entity(model='sphere', position=(0, 0, 0), color=color.rgba(255, 255, 0, 128), scale=2.05, texture="tex/2k_sun")
-    corona2 = Entity(model='sphere', position=(0, 0, 0), color=color.rgba(255, 255, 0, 32),  scale=2.15)
+    sol = Entity(model='sphere',
+                 position=(0, 0, 0),
+                 color=color.yellow,
+                 scale=2,
+                 texture="tex/2k_sun",
+                 collider="sphere")
+    corona = Entity(model='sphere',
+                    position=(0, 0, 0),
+                    color=color.rgba(255, 255, 0, 128),
+                    scale=2.05,
+                    texture="tex/2k_sun")
+    corona2 = Entity(model='sphere',
+                     position=(0, 0, 0),
+                     color=color.rgba(255, 255, 0, 32),
+                     scale=2.15)
 
     return [sol, corona, corona2]
 
 
 def planet(parent, position, texture):
-    sphere = Entity(parent=parent, model='sphere', position=position, scale=0.2, texture=texture)
-    sphere_atmosphere = Entity(parent=parent, model='sphere', position=position, color=color.rgba(0, 0, 128, 96), scale=.22,collider='box', on_click=show_name)
+    sphere = Entity(parent=parent,
+                    model='sphere',
+                    position=position,
+                    scale=0.2,
+                    texture=texture)
+    sphere_atmosphere = Entity(parent=parent,
+                               model='sphere',
+                               position=position,
+                               color=color.rgba(0, 0, 128, 96),
+                               scale=.22,
+                               collider='box',
+                               on_click=show_name)
     return [sphere, sphere_atmosphere]
 
 
 def moon(parent):
-    return [Entity(parent=parent, model='sphere', color=color.white, position=(0.5, 0, 0.5), scale=0.09, texture="tex/2k_moon")]
+    for _ in range(10):
+        satellite = Entity(parent=parent,
+                           model='sphere',
+                           color=color.white,
+                           position=(1 + random.random() * 1.3, 0, 0),
+                           scale=0.1 * random.random(),
+                           texture="tex/2k_moon",
+                           rotation_y=random.random() * 180
+                           )
+    return [satellite]
 
 
 def show_name():
     Text.size = 0.002
     Text.default_resolution = 100
     text_name = Text(text="Earth")
-    text_name.x = mouse.x  / 25.
-    text_name.y = mouse.y  / 25.
+    text_name.x = mouse.x / 25.
+    text_name.y = mouse.y / 25.
     text_name.visible = True
     print("Click!")
 
@@ -104,17 +134,16 @@ def setup():
     window.color = color.rgba(10, 10, 10, 0)
 
 
-app    = Ursina()
+app = Ursina()
 
-sol    = star()
+sol = star()
 planet = planet(sol[0], position=(1, 0, 1), texture="tex/earth")
-moons  = moon(planet[0])
+moons = moon(planet[0])
 
 Text.size = 0.002
 Text.default_resolution = 100
 info = Text(text="Hover!")
 info.visible = False
-
 
 setup()
 
