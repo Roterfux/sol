@@ -1,4 +1,5 @@
 from ursina import *  # import ursina engine
+import sqlite3
 
 pause = False
 
@@ -134,11 +135,26 @@ def setup():
     window.color = color.rgba(10, 10, 10, 0)
 
 
+def db_test():
+    con = sqlite3.connect('sol.db')
+    cur = con.cursor()
+    cur.execute("CREATE TABLE stocks (date text, trans text, symbol text, qty real, price real)")
+    cur.execute("INSERT INTO stocks VALUES ('2006-01-05','BUY','RHAT',100,35.14)")
+    con.commit()
+
+    for row in cur.execute('SELECT * FROM stocks ORDER BY price'):
+        print(row)
+    cur.execute("DROP TABLE stocks")
+    con.close()
+
+
 app = Ursina()
 
 sol = star()
 planet = planet(sol[0], position=(1, 0, 1), texture="tex/earth")
 moons = moon(planet[0])
+
+db_test()
 
 Text.size = 0.002
 Text.default_resolution = 100
