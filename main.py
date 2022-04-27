@@ -15,6 +15,9 @@ def update():
 
     key_action()
     mouse_action()
+    print("X diff: ", sol[0].x - mouse.x)
+    print("Y diff: ", sol[0].y - mouse.y)
+    #print(sol[0].z -calc)
 
 
 def key_action():
@@ -39,8 +42,8 @@ def key_action():
 def mouse_action():
     if mouse.hovered_entity == sol[0]:
         info.visible = True
-        info.x = mouse.x / 25.
-        info.y = mouse.y / 25.
+        info.x = mouse.x
+        info.y = mouse.y
     else:
         info.visible = False
     # print(": {:.3f} {:.3f}".format(mouse.x, mouse.y))
@@ -156,10 +159,7 @@ moons = moon(planet[0])
 
 db_test()
 
-Text.size = 0.002
-Text.default_resolution = 100
-info = Text(text="Hover!")
-info.visible = False
+info = Text(text="This is a test", color=color.white, scale=1)
 
 setup()
 
