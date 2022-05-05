@@ -50,9 +50,10 @@ class Planet(object):
 
 
 class Sun(object):
-    sun = Entity(model='sphere', color=color.yellow, scale=1, texture="tex/2k_sun")
-    cor = Entity(model='sphere', color=color.rgba(255, 255, 0, 128), scale=1.05, texture="tex/2k_sun")
-    co2 = Entity(model='sphere', color=color.rgba(255, 255, 0, 32), scale=1.15)
+    def __init__(self):
+        Entity(model='sphere', color=color.yellow, scale=1, texture="tex/2k_sun")
+        Entity(model='sphere', color=color.rgba(255, 255, 0, 128), scale=1.05, texture="tex/2k_sun")
+        Entity(model='sphere', color=color.rgba(255, 255, 0, 32), scale=1.15)
 
 
 def update():
