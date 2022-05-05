@@ -68,7 +68,8 @@ textures = [
     "2k_jupiter",
     "2k_mars",
     "2k_moon",
-    "earth"
+    "earth",
+    "2k_earth_nightmap"
 ]
 
 p = []
