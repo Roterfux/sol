@@ -3,6 +3,8 @@ import numpy as np
 from random import random, randint, choice
 from uuid import uuid4
 
+pause = False
+
 
 class Planet(object):
 
@@ -60,6 +62,45 @@ def update():
 
     for _ in p:
         _.update()
+    key_action()
+
+
+def key_action():
+    if held_keys['e']:
+        camera.position += (0, time.dt, 0)
+    if held_keys['q']:
+        camera.position -= (0, time.dt, 0)
+    if held_keys['w']:
+        camera.position -= (0, 0, -time.dt)
+    if held_keys['s']:
+        camera.position -= (0, 0, time.dt)
+    if held_keys['a']:
+        camera.position -= (time.dt, 0, 0)
+    if held_keys['d']:
+        camera.position -= (-time.dt, 0, 0)
+
+    if held_keys['x']:
+        exit(0)
+
+
+def input(key):
+    if key == '1':
+        camera.position = (0, 0, -20)
+        camera.rotation_x = 0
+
+    if key == '2':
+        camera.position = (0, 20, 0)
+        camera.rotation_x = 90
+
+    if key == '3':
+        camera.position = (0, 10, -20)
+        camera.rotation_x = 30
+
+    if key == "space":
+        global pause
+        pause = not pause
+
+
 
 
 app = Ursina()
