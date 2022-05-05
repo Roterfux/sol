@@ -1,8 +1,6 @@
-from turtle import position
-
 from ursina import *
 import numpy as np
-from random import random, randint
+from random import random, randint, choice
 from uuid import uuid4
 
 
@@ -11,7 +9,7 @@ class Planet(object):
     def __init__(self, tex):
         self.entity = Entity(model='sphere', texture=tex, collider='sphere')
         self.entity.name = str(uuid4())[:5]
-        self.s = 0.1 + random() * .1
+        self.s = 0.1 + random() * .3
         self.r = random() * 5
         print(self.r)
         self.angle = np.pi * (random() * 360.) / 180.
@@ -51,6 +49,12 @@ class Planet(object):
         selector.color = color.rgba(255, 255, 0, 32)
 
 
+class Sun(object):
+    sun = Entity(model='sphere', color=color.yellow, scale=1, texture="tex/2k_sun")
+    cor = Entity(model='sphere', color=color.rgba(255, 255, 0, 128), scale=1.05, texture="tex/2k_sun")
+    co2 = Entity(model='sphere', color=color.rgba(255, 255, 0, 32), scale=1.15)
+
+
 def update():
 
     for _ in p:
@@ -59,13 +63,19 @@ def update():
 
 app = Ursina()
 
+textures = [
+    "2k_jupiter",
+    "2k_mars",
+    "2k_moon",
+    "earth"
+]
 
 p = []
-for _ in range(50):
-    p.append(Planet(tex="tex/earth"))
-print(len(p))
+for _ in range(8):
+    p.append(Planet(tex="tex/" + choice(textures)))
+sol = Sun()
 
-camera.rotation_z = 0
+#camera.rotation_z = 30
 camera.position = (0, 10, -20)
 camera.rotation_x = 25
 window.color = color.rgba(10, 10, 10, 0)
