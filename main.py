@@ -5,13 +5,14 @@ pause = False
 
 
 def update():
+    mouse_action()
     if not pause:
         for entity in sol:
             entity.rotation_y += time.dt * 10
-        for entity in planet:
+        for entity in planet1:
             entity.rotation_y += time.dt * 50
-        for entity in moons:
-            entity.rotation_y -= time.dt * 100
+        #for entity in moons1:
+        #    entity.rotation_y -= time.dt * 100
 
     diff = sqrt((sol[0].x - mouse.x) ** 2 + (sol[0].y - mouse.y) ** 2 + sol[0].z ** 2)
     #print(diff)
@@ -19,7 +20,7 @@ def update():
     print(diff_x)
 
     key_action()
-    mouse_action()
+
 
 
 def key_action():
@@ -41,10 +42,12 @@ def key_action():
 
 
 def mouse_action():
+
     if mouse.hovered_entity == sol[0]:
         info.visible = True
         info.x = mouse.x + .025
         info.y = mouse.y - .025
+
     else:
         info.visible = False
 
@@ -75,9 +78,9 @@ def star():
     return [sun, corona, corona2]
 
 
-def planet(parent, position, texture):
-    sphere = Entity(parent=parent, model='sphere', position=position, scale=0.2, texture=texture)
-    sphere_atmosphere = Entity(parent=parent, model='sphere', position=position, color=color.rgba(0, 0, 128, 96), scale=.22, collider='box', on_click=show_name)
+def planet(position, texture, scale):
+    sphere = Entity(model='sphere', position=position, scale=scale, texture=texture)
+    sphere_atmosphere = Entity(model='sphere', position=position, color=color.rgba(0, 0, 128, 96), scale=scale+scale*0.1, collider='sphere')#, on_click=show_name)
 
     return [sphere, sphere_atmosphere]
 
@@ -125,8 +128,11 @@ def db_test():
 app = Ursina()
 
 sol = star()
-planet = planet(sol[0], position=(1, 0, 1), texture="tex/earth")
-moons = moon(planet[0])
+planet1 = planet(position=(2, 0, 2), scale=0.2, texture="tex/earth")
+#planet2 = planet(position=(2, 0, 2), texture="tex/2k_mars")
+#planet3 = planet(position=(3, 0, 3), texture="tex/2k_jupiter")
+moons1 = moon(planet1[0])
+#moons2 = moon(planet2[0])
 
 db_test()
 info = Text(text="This is a test", color=color.white, scale=1)
