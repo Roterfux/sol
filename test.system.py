@@ -2,7 +2,6 @@ from ursina.shaders import lit_with_shadows_shader
 from ursina import *
 import numpy as np
 from random import random, randint, choice
-from uuid import uuid4
 
 pause = False
 
@@ -10,7 +9,7 @@ pause = False
 class Planet(object):
 
     def __init__(self, tex):
-        self.entity = Entity(model='sphere', texture=tex, collider='sphere')
+        self.entity = Entity(model='sphere', texture=tex, collider='sphere')#, shader=lit_with_shadows_shader)
         self.entity.name = self.entity.texture.name
         #self.entity.name = str(uuid4())[:5]
         self.s = 0.1 + random() * .3
@@ -53,8 +52,15 @@ class Planet(object):
 class Sun(object):
     def __init__(self):
         Entity(model='sphere', color=color.yellow, scale=1, texture="tex/2k_sun", shader=lit_with_shadows_shader)
-        #Entity(model='sphere', color=color.rgba(255, 255, 0, 96), scale=1.05, texture="tex/2k_sun")
-        #Entity(model='sphere', color=color.rgba(255, 255, 0, 32), scale=1.15)
+        Entity(model='sphere', color=color.rgba(255, 255, 0, 96), scale=1.05, texture="tex/2k_sun", shader=lit_with_shadows_shader)
+        Entity(model='sphere', color=color.rgba(255, 255, 0, 32), scale=1.15, shader=lit_with_shadows_shader)
+        PointLight(shadows=True, color=color.yellow)
+
+
+class Background(object):
+    def __init__(self):
+        DirectionalLight(x=20, y=10, z=10, shadows=True, rotation=(45, -45, 45), color=color.rgba(100, 100, 100, 16))
+        Entity(model='sphere', scale=50, texture="tex/8k_stars", double_sided=True, shader=lit_with_shadows_shader)
 
 
 def update():
@@ -130,14 +136,14 @@ def read_texture_names():
 app = Ursina()
 
 EditorCamera()
-pivot = Entity()
-PointLight(parent=pivot, x=0, y=0, z=0, shadows=True)
-SpotLight(parent=pivot, x=0, y=0, z=0, shadows=True)
+
 
 p = []
 for _ in range(8):
     p.append(Planet(tex="tex/" + read_texture_names()[_]))
 sol = Sun()
+Background()
+
 
 #camera.rotation_z = 30
 camera.position = (0, 10, -20)
