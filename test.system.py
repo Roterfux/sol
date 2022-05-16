@@ -1,3 +1,4 @@
+from ursina.shaders import lit_with_shadows_shader
 from ursina import *
 import numpy as np
 from random import random, randint, choice
@@ -10,10 +11,10 @@ class Planet(object):
 
     def __init__(self, tex):
         self.entity = Entity(model='sphere', texture=tex, collider='sphere')
-        self.entity.name = str(uuid4())[:5]
+        self.entity.name = self.entity.texture.name
+        #self.entity.name = str(uuid4())[:5]
         self.s = 0.1 + random() * .3
-        self.r = random() * 5
-        print(self.r)
+        self.r = 0.75 + random() * 5.1
         self.angle = np.pi * (random() * 360.) / 180.
         self.rot_dir = randint(0, 1)
         #self.sec = 0
@@ -32,9 +33,9 @@ class Planet(object):
         self.entity.z = np.sin(self.t + self.angle) * self.r
         self.entity.scale = Vec3(self.s, self.s, self.s)
         if self.rot_dir == 0:
-            self.entity.rotation_y += time.dt * 10
+            self.entity.rotation_y += time.dt * 20
         else:
-            self.entity.rotation_y += time.dt * -10
+            self.entity.rotation_y += time.dt * -20
 
         if self.entity.hovered:
             self.selector.visible = True
@@ -44,8 +45,6 @@ class Planet(object):
             self.selector.visible = False
             self.text.visible = False
 
-        print(time.dt)
-
     def show_name(self):
         selector = self.entity
         selector.color = color.rgba(255, 255, 0, 32)
@@ -53,9 +52,9 @@ class Planet(object):
 
 class Sun(object):
     def __init__(self):
-        Entity(model='sphere', color=color.yellow, scale=1, texture="tex/2k_sun")
-        Entity(model='sphere', color=color.rgba(255, 255, 0, 128), scale=1.05, texture="tex/2k_sun")
-        Entity(model='sphere', color=color.rgba(255, 255, 0, 32), scale=1.15)
+        Entity(model='sphere', color=color.yellow, scale=1, texture="tex/2k_sun", shader=lit_with_shadows_shader)
+        #Entity(model='sphere', color=color.rgba(255, 255, 0, 96), scale=1.05, texture="tex/2k_sun")
+        #Entity(model='sphere', color=color.rgba(255, 255, 0, 32), scale=1.15)
 
 
 def update():
@@ -63,6 +62,24 @@ def update():
     for _ in p:
         _.update()
     key_action()
+    #mouse_action()
+
+
+def mouse_action():
+    #mouse_pos = Text()
+    #   x    y     z
+    # 0.0 10.0 -20.0
+    # 0.8  0.4 -----
+
+    if window.center.x > mouse.x:
+        camera.position -= (time.dt / 10, 0, 0)
+    else:
+        camera.position += (time.dt / 10, 0, 0)
+
+    if window.center.y > mouse.y:
+        camera.position -= (0, time.dt / 10, 0)
+    else:
+        camera.position += (0, time.dt / 10, 0)
 
 
 def key_action():
@@ -78,7 +95,6 @@ def key_action():
         camera.position -= (time.dt, 0, 0)
     if held_keys['d']:
         camera.position -= (-time.dt, 0, 0)
-
     if held_keys['x']:
         exit(0)
 
@@ -96,26 +112,31 @@ def input(key):
         camera.position = (0, 10, -20)
         camera.rotation_x = 30
 
-    if key == "space":
+    if key == "enter":
         global pause
         pause = not pause
 
 
+def read_texture_names():
+    import os
+    textures = []
+    with os.scandir("./tex/") as dirs:
+        for entry in dirs:
+            if "2k" in entry.name:
+                textures.append(entry.name)
+    return textures
 
 
 app = Ursina()
 
-textures = [
-    "2k_jupiter",
-    "2k_mars",
-    "2k_moon",
-    "earth",
-    "2k_earth_nightmap"
-]
+EditorCamera()
+pivot = Entity()
+PointLight(parent=pivot, x=0, y=0, z=0, shadows=True)
+SpotLight(parent=pivot, x=0, y=0, z=0, shadows=True)
 
 p = []
 for _ in range(8):
-    p.append(Planet(tex="tex/" + choice(textures)))
+    p.append(Planet(tex="tex/" + read_texture_names()[_]))
 sol = Sun()
 
 #camera.rotation_z = 30
