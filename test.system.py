@@ -1,7 +1,7 @@
 from ursina.shaders import lit_with_shadows_shader
 from ursina import *
 import numpy as np
-from random import random, randint, choice
+from random import random, randint
 
 pause = False
 
@@ -9,7 +9,7 @@ pause = False
 class Planet(object):
 
     def __init__(self, tex):
-        self.entity = Entity(model='sphere', texture=tex, collider='sphere')#, shader=lit_with_shadows_shader)
+        self.entity = Entity(model='sphere', texture=tex, collider='sphere')
         self.entity.name = self.entity.texture.name
         #self.entity.name = str(uuid4())[:5]
         self.s = 0.1 + random() * .3
@@ -28,8 +28,8 @@ class Planet(object):
         self.t += 0.002
 
         self.entity.x = np.cos(self.t + self.angle) * self.r
-        self.entity.y = 0
         self.entity.z = np.sin(self.t + self.angle) * self.r
+        self.entity.y = 0
         self.entity.scale = Vec3(self.s, self.s, self.s)
         if self.rot_dir == 0:
             self.entity.rotation_y += time.dt * 20
@@ -61,6 +61,10 @@ class Background(object):
     def __init__(self):
         DirectionalLight(x=20, y=10, z=10, shadows=True, rotation=(45, -45, 45), color=color.rgba(100, 100, 100, 16))
         Entity(model='sphere', scale=50, texture="tex/8k_stars", double_sided=True, shader=lit_with_shadows_shader)
+
+
+class StarSystem(object):
+    pass
 
 
 def update():
@@ -133,20 +137,19 @@ def read_texture_names():
     return textures
 
 
-app = Ursina()
+if __name__ == '__main__':
+    app = Ursina(vsync=True)
 
-EditorCamera()
+    EditorCamera()
 
+    p = []
+    for _ in range(8):
+        p.append(Planet(tex="tex/" + read_texture_names()[_]))
+    sol = Sun()
+    Background()
 
-p = []
-for _ in range(8):
-    p.append(Planet(tex="tex/" + read_texture_names()[_]))
-sol = Sun()
-Background()
-
-
-#camera.rotation_z = 30
-camera.position = (0, 10, -20)
-camera.rotation_x = 25
-window.color = color.rgba(10, 10, 10, 0)
-app.run()
+    #camera.rotation_z = 30
+    camera.position = (0, 10, -20)
+    camera.rotation_x = 25
+    window.color = color.rgba(10, 10, 10, 0)
+    app.run()
