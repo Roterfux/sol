@@ -60,7 +60,8 @@ class Sun(object):
 class Background(object):
     def __init__(self):
         DirectionalLight(x=20, y=10, z=10, shadows=True, rotation=(45, -45, 45), color=color.rgba(100, 100, 100, 16))
-        Entity(model='sphere', scale=50, texture="tex/8k_stars", double_sided=True, shader=lit_with_shadows_shader)
+        Sky(model="sphere", double_sided=True, texture="tex/8k_stars", rotation=(0, 90, 0))
+        #Entity(model='sphere', scale=50, texture="tex/8k_stars", double_sided=True, shader=lit_with_shadows_shader)
 
 
 class StarSystem(object):
