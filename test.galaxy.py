@@ -1,19 +1,22 @@
 from ursina import *
 import numpy as np
-
+from uuid import uuid4
 
 class Star(object):
     def __init__(self, x, y, z, color):
+        self.id = str(uuid4())[:4]
         self.x = x
         self.y = y
         self.z = z
         self.entity = Entity(model='sphere', collider='sphere', x=x, y=y, z=z, scale=0.075, color=color)
         self.connection = 0
-        self.nearest_star = []
+        self.nearest_star = None
+        self.nearest_star_distance = 1000
 
-    def update(self, connection, nearest_star):
+    def update(self, connection, nearest_star, nearest_star_distance):
         self.connection = connection
         self.nearest_star = nearest_star
+        self.nearest_star_distance = nearest_star_distance
 
 
 app = Ursina()
@@ -23,42 +26,51 @@ EditorCamera()
 
 angle = 0
 radius = 0
-count = 70
+count = 25
 
-s = []
+
+stars = []
 
 for _ in range(count):
     angle += 10/count
-    radius += .8
+    radius += .81
     x = np.sin(angle) * radius/10 + random.random()
     y = np.cos(angle) * radius/10 + random.random()
     #Entity(model="sphere", scale=0.1, x=x, y=y, color=color.white)
-    star_left = Star(x=x, y=0, z=y, color=color.white)
+    stars.append(Star(x=x, y=0, z=y, color=color.white))
     x = -np.sin(angle) * radius/10 + random.random()
     z = -np.cos(angle) * radius/10 + random.random()
     #Entity(model="sphere", scale=0.1, x=x, y=y, color=color.yellow)
-    star_right = Star(x=x, y=0, z=y, color=color.yellow)
-    s.append(star_left)
-    s.append(star_right)
+    stars.append(Star(x=x, y=0, z=y, color=color.yellow))
+
 
 distance = []
-for i in s:
-    for j in s:
+cnt = 0
+for i in stars:
+    i.id = cnt
+    max_distance = 1000
+    for j in stars:
+        if j.id == i.id:
+            continue
         d = np.sqrt((i.x - j.x)**2 + (i.y - j.y)**2 + (i.z - j.z)**2)
-        distance.append(d)
 
-        #calc closet stars (1-3) and connect
+        if max_distance > d:
+            cnt += 1
+            max_distance = d
+            i.nearest_star = j
 
-        if d < 1:
-            print(d)
-            #line_renderer = Entity(model=Mesh(vertices=[Vec3(0), Vec3(0)], mode='line', thickness=5), z=.1, color=color.white)
+    print(i.id, i.nearest_star.id)
 
-            if i.connection < 2 and j.connection < 1:
-                i.connection += 1
-                points = [Vec3(i.x, i.y, i.z), Vec3(j.x, j.y, j.z)]
-                curve_renderer = Entity(model=Mesh(vertices=points, mode='line'), color=color.blue)
 
-print(s[1].connection)
+for star in stars:
+    try:
+        #print(star.id, star.nearest_star.id)
+        points = [Vec3(star.x, star.y, star.z), Vec3(star.nearest_star.x, star.nearest_star.y, star.nearest_star.z)]
+        curve_renderer = Entity(model=Mesh(vertices=points, mode='line'), color=color.blue)
+    except:
+        pass
+
+#print(s[1].connection)
 
 
 #camera.rotation_z = 30
