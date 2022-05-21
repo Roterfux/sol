@@ -44,9 +44,9 @@ class Planet(object):
             self.selector.visible = False
             self.text.visible = False
 
-    def show_name(self):
-        selector = self.entity
-        selector.color = color.rgba(255, 255, 0, 32)
+#    def show_name(self):
+#        selector = self.entity
+#        selector.color = color.rgba(255, 255, 0, 32)
 
 
 class Sun(object):

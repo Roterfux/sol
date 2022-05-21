@@ -12,6 +12,7 @@ class Star(object):
         self.x = x
         self.y = y
         self.z = z
+        self.scale = 0.05
         self.entity = Entity(model='sphere', collider='sphere', x=x, y=y, z=z, scale=0.05, color=color)
         #Sprite('tex/light', filtering=False, scale=0.05, color=color, x=x, y=y, z=z, double_sided=True, rotation=(0, 0, 0))
         #Sprite('tex/light', filtering=False, scale=0.05, color=color, x=x, y=y, z=z, double_sided=True, rotation=(0, 90, 0))
@@ -21,11 +22,19 @@ class Star(object):
         self.connection = 0
         self.nearest_star = []
         self.nearest_star_distance = 1000
+        # % 5.4f' %(3.141592))
+        self.text = Text("%1.2f" % self.x + " " + "%1.2f" % self.y  + " " "%1.2f" % self.z)
+        self.text.visible = False
 
-    def update(self, connection, nearest_star, nearest_star_distance):
-        self.connection = connection
-        self.nearest_star = nearest_star
-        self.nearest_star_distance = nearest_star_distance
+    def update(self, scale=0.05):
+        #
+        self.entity.scale = scale
+        if self.entity.hovered:
+            self.text.position = (mouse.x, mouse.y+.03)
+            self.text.visible = True
+        else:
+            self.text.visible = False
+
 
 
 app = Ursina()
@@ -72,12 +81,21 @@ for star in stars:
 
 for star in stars:
     try:
-        print(star.id, star.nearest_star[-1].id)
+        #print(star.id, star.nearest_star[-1].id)
+        print(star.z*10)
         points = [Vec3(star.x, star.y, star.z), Vec3(star.nearest_star[-1].x, star.nearest_star[-1].y, star.nearest_star[-1].z)]
-        if star.z < 0:
-            t = 100
-        else:
-            t = 50
+        if int(star.z*10) <= -2:
+            t = 128
+            star.update(scale=0.05)
+        elif int(star.z*10) == -1:
+            t = 96
+            star.update(scale=0.01)
+        elif int(star.z*10) == 1:
+            t = 64
+            star.update(scale=0.005)
+        elif int(star.z*10) >= 2:
+            t = 48
+            star.update(scale=0.001)
         Entity(model=Mesh(vertices=points, mode='line', thickness=2), color=rgb(255, 255, 0, t / 3))
         Entity(model=Mesh(vertices=points, mode='line', thickness=1), color=rgb(255, 255, 255, t / 3))
         #print(star.id, star.nearest_star[-2].id)
@@ -89,6 +107,11 @@ for star in stars:
         pass
 
 #print(s[1].connection)
+
+
+def update():
+    for star in stars:
+        star.update()
 
 camera.orthographic = True
 camera.fov = 5
