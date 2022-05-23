@@ -150,6 +150,7 @@ if __name__ == '__main__':
     Background()
 
     #camera.rotation_z = 30
+    window.vsync = True
     camera.position = (0, 10, -20)
     camera.rotation_x = 25
     window.color = color.rgba(10, 10, 10, 0)

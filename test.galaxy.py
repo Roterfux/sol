@@ -7,17 +7,17 @@ from uuid import uuid4
 
 
 class Star(object):
-    def __init__(self, x, y, z, color):
+    def __init__(self, x, y, z, c):
         self.id = str(uuid4())[:4]
         self.x = x
         self.y = y
         self.z = z
         self.scale = 0.05
-        self.entity = Entity(model='sphere', collider='sphere', x=x, y=y, z=z, scale=0.05, color=color)
-        #self.entity = Sprite('tex/light', filtering=False, scale=0.05, color=color, x=x, y=y, z=z, double_sided=True, rotation=(0, 0, 0))
-        #Sprite('tex/light', filtering=False, scale=0.05, color=color, x=x, y=y, z=z, double_sided=True, rotation=(0, 90, 0))
-        #Sprite('tex/light', filtering=False, scale=0.05, color=color, x=x, y=y, z=z, double_sided=True, rotation=(0, 0, 90))
-        #Sprite('tex/light', filtering=False, scale=0.05, color=color, x=x, y=y, z=z, double_sided=True, rotation=(90, 0, 0))
+        self.sphere = Entity(model='sphere', collider='sphere', x=x, y=y, z=z, scale=0.05, color=rgb(0, 0, 0, 0))
+        self.entity = [Sprite('tex/light', filtering=False, scale=0.04, color=c, x=x, y=y, z=z, double_sided=True, rotation=(0, 0, 0))]
+        self.entity.append(Sprite('tex/light', filtering=False, scale=0.04, color=c, x=x, y=y, z=z, double_sided=True, rotation=(0, 90, 0)))
+        self.entity.append(Sprite('tex/light', filtering=False, scale=0.04, color=c, x=x, y=y, z=z, double_sided=True, rotation=(0, 0, 90)))
+        self.entity.append(Sprite('tex/light', filtering=False, scale=0.04, color=c, x=x, y=y, z=z, double_sided=True, rotation=(90, 0, 0)))
 
         self.connection = 0
         self.nearest_star = []
@@ -25,23 +25,27 @@ class Star(object):
         # % 5.4f' %(3.141592))
         self.text = Text("%1.2f" % self.x + " " + "%1.2f" % self.y  + " " "%1.2f" % self.z)
         self.text.visible = False
-        if int(self.z*10) <= -2:
-            self.entity.scale = 0.05
-        elif int(self.z*10) == -1:
-            self.entity.scale = 0.04
-        elif int(self.z*10) == 1:
-            self.entity.scale = 0.03
-        elif int(self.z*10) >= 2:
-            self.entity.scale = 0.02
+        s = 0
+        z_temp = int(self.z * 10)
+        if z_temp <= -2:
+            s = 0.1
+        elif z_temp == -1:
+            s = 0.08
+        elif z_temp == 1:
+            s = 0.06
+        elif z_temp >= 2:
+            s = 0.04
+
+        for e in self.entity:
+            e.scale = s
 
     def update(self):
         #
-        if self.entity.hovered:
+        if self.sphere.hovered:
             self.text.position = (mouse.x, mouse.y+.03)
             self.text.visible = True
         else:
             self.text.visible = False
-
 
 
 app = Ursina()
@@ -61,17 +65,16 @@ for _ in range(count):
     radius += .3
     x = np.sin(angle) * radius/10 + random.random()
     z = np.cos(angle) * radius/10 + random.random()
-    y = random.random()/2
+    y = random.random()/2.5
     #Entity(model="sphere", scale=0.1, x=x, y=y, color=color.white)
-    stars.append(Star(x=x, y=y, z=z, color=color.white))
+    stars.append(Star(x=x, y=y, z=z, c=color.white))
     x = -np.sin(angle) * radius/10 + random.random()
     z = -np.cos(angle) * radius/10 + random.random()
-    y = -random.random() / 2
+    y = -random.random() / 2.5
     #Entity(model="sphere", scale=0.1, x=x, y=y, color=color.yellow)
-    stars.append(Star(x=x, y=y, z=z, color=color.yellow))
+    stars.append(Star(x=x, y=y, z=z, c=color.white))
 
 
-#distance = []
 cnt = 0
 for star in stars:
     star.id = cnt
@@ -89,38 +92,42 @@ for star in stars:
 for star in stars:
     try:
         #print(star.id, star.nearest_star[-1].id)
-        print(star.z*10)
+        #print(star.z*10)
         points = [Vec3(star.x, star.y, star.z), Vec3(star.nearest_star[-1].x, star.nearest_star[-1].y, star.nearest_star[-1].z)]
-        if int(star.z*10) <= -2:
+        star_calc = int(star.z * 10)
+        if star_calc <= -2:
             t = 128
-        elif int(star.z*10) == -1:
+        elif star_calc == -1:
             t = 96
-        elif int(star.z*10) == 1:
+        elif star_calc == 1:
             t = 64
-        elif int(star.z*10) >= 2:
+        elif star_calc >= 2:
             t = 48
-        Entity(model=Mesh(vertices=points, mode='line', thickness=2), color=rgb(255, 255, 0, t / 3))
+        else:
+            t = 32
+        Entity(model=Mesh(vertices=points, mode='line', thickness=2), color=rgb(0, 64, 255, t / 3))
         Entity(model=Mesh(vertices=points, mode='line', thickness=1), color=rgb(255, 255, 255, t / 3))
         #print(star.id, star.nearest_star[-2].id)
         points = [Vec3(star.x, star.y, star.z), Vec3(star.nearest_star[-2].x, star.nearest_star[-2].y, star.nearest_star[-2].z)]
-        Entity(model=Mesh(vertices=points, mode='line', thickness=2), color=rgb(255, 255, 0, t / 3))
+        Entity(model=Mesh(vertices=points, mode='line', thickness=2), color=rgb(0, 64, 255, t / 3))
         Entity(model=Mesh(vertices=points, mode='line', thickness=1), color=rgb(255, 255, 255, t / 3))
         #print(star.z)
     except:
         pass
-
-#print(s[1].connection)
 
 
 def update():
     for star in stars:
         star.update()
 
+
 camera.orthographic = True
 camera.fov = 5
 Sprite.ppu = 16
 Texture.default_filtering = None
 
+window.vsync = False
+#editor_ui = True
 #camera.rotation_z = 30
 camera.position = (0, 10, -20)
 camera.rotation_x = 25
