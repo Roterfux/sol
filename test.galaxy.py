@@ -12,12 +12,14 @@ class Star(object):
         self.x = x
         self.y = y
         self.z = z
+        self.angle = None
+        self.radius = None
         self.scale = 0.05
-        self.sphere = Entity(model='sphere', collider='sphere', x=x, y=y, z=z, scale=0.05, color=rgb(0, 0, 0, 0))
-        self.entity = [Sprite('tex/light', filtering=False, scale=0.04, color=c, x=x, y=y, z=z, double_sided=True, rotation=(0, 0, 0))]
-        self.entity.append(Sprite('tex/light', filtering=False, scale=0.04, color=c, x=x, y=y, z=z, double_sided=True, rotation=(0, 90, 0)))
-        self.entity.append(Sprite('tex/light', filtering=False, scale=0.04, color=c, x=x, y=y, z=z, double_sided=True, rotation=(0, 0, 90)))
-        self.entity.append(Sprite('tex/light', filtering=False, scale=0.04, color=c, x=x, y=y, z=z, double_sided=True, rotation=(90, 0, 0)))
+        self.sphere = Entity(model='sphere', collider='sphere', x=x, y=y, z=z, scale=self.scale, color=rgb(0, 0, 0, 0))
+        self.entity = [Sprite('tex/light', filtering=False, scale=self.scale, color=c, x=x, y=y, z=z, double_sided=True, rotation=(0, 0, 0))]
+        self.entity.append(Sprite('tex/light', filtering=False, scale=self.scale, color=c, x=x, y=y, z=z, double_sided=True, rotation=(0, 90, 0)))
+        self.entity.append(Sprite('tex/light', filtering=False, scale=self.scale, color=c, x=x, y=y, z=z, double_sided=True, rotation=(0, 0, 90)))
+        self.entity.append(Sprite('tex/light', filtering=False, scale=self.scale, color=c, x=x, y=y, z=z, double_sided=True, rotation=(90, 0, 0)))
 
         self.connection = 0
         self.nearest_star = []
@@ -96,15 +98,15 @@ for star in stars:
         points = [Vec3(star.x, star.y, star.z), Vec3(star.nearest_star[-1].x, star.nearest_star[-1].y, star.nearest_star[-1].z)]
         star_calc = int(star.z * 10)
         if star_calc <= -2:
-            t = 128
-        elif star_calc == -1:
             t = 96
-        elif star_calc == 1:
+        elif star_calc == -1:
             t = 64
-        elif star_calc >= 2:
+        elif star_calc == 1:
             t = 48
-        else:
+        elif star_calc >= 2:
             t = 32
+        else:
+            t = 16
         Entity(model=Mesh(vertices=points, mode='line', thickness=2), color=rgb(0, 64, 255, t / 3))
         Entity(model=Mesh(vertices=points, mode='line', thickness=1), color=rgb(255, 255, 255, t / 3))
         #print(star.id, star.nearest_star[-2].id)
@@ -119,6 +121,24 @@ for star in stars:
 def update():
     for star in stars:
         star.update()
+
+
+def input(key):
+    #print(key)
+
+    if mouse.left:
+        pos_x = mouse.x
+        pos_y = mouse.y
+    else:
+        pos_x = 0
+        pos_y = 0
+
+    if pos_x < mouse.x:
+        print("<")
+        # rotate clockwise
+    elif pos_x > mouse.x:
+        print(">")
+        # rotate counterclockwise
 
 
 camera.orthographic = True
