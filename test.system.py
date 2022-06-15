@@ -60,7 +60,7 @@ class Sun(object):
 class Background(object):
     def __init__(self):
         DirectionalLight(x=20, y=10, z=10, shadows=True, rotation=(45, -45, 45), color=color.rgba(100, 100, 100, 16))
-        Sky(model="sphere", double_sided=True, texture="tex/8k_stars", rotation=(0, 90, 0))
+        #Sky(model="sphere", double_sided=True, texture="tex/8k_stars", rotation=(0, 90, 0))
         #Entity(model='sphere', scale=50, texture="tex/8k_stars", double_sided=True, shader=lit_with_shadows_shader)
 
 
@@ -94,20 +94,13 @@ def mouse_action():
 
 
 def key_action():
-    if held_keys['e']:
-        camera.position += (0, time.dt, 0)
-    if held_keys['q']:
-        camera.position -= (0, time.dt, 0)
-    if held_keys['w']:
-        camera.position -= (0, 0, -time.dt)
-    if held_keys['s']:
-        camera.position -= (0, 0, time.dt)
-    if held_keys['a']:
-        camera.position -= (time.dt, 0, 0)
-    if held_keys['d']:
-        camera.position -= (-time.dt, 0, 0)
-    if held_keys['x']:
-        exit(0)
+    if held_keys['e']: camera.position += (0, time.dt, 0)
+    if held_keys['q']: camera.position -= (0, time.dt, 0)
+    if held_keys['w']: camera.position -= (0, 0, -time.dt)
+    if held_keys['s']: camera.position -= (0, 0, time.dt)
+    if held_keys['a']: camera.position -= (time.dt, 0, 0)
+    if held_keys['d']: camera.position -= (-time.dt, 0, 0)
+    if held_keys['x']:  exit(0)
 
 
 def input(key):
@@ -153,5 +146,5 @@ if __name__ == '__main__':
     window.vsync = True
     camera.position = (0, 10, -20)
     camera.rotation_x = 25
-    window.color = color.rgba(10, 10, 10, 0)
+    window.color = color.rgba(32, 32, 32, 0)
     app.run()
